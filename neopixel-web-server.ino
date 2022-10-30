@@ -25,7 +25,6 @@ void setup() {
   Serial.print("Initializing lights...");
 
   ws2812fx.init();
-  ws2812fx.setSpeed(DEFAULT_SPEED);
   ws2812fx.setColor(0xFF4301);
   ws2812fx.setMode(FX_MODE_STATIC);
   ws2812fx.setBrightness(20);
@@ -56,7 +55,9 @@ void setup() {
 }
 
 void loop() {
+  // TODO: figure out how to do Arduino things asynchronously... or convert this to TinyGo when it supports goroutines and Wemos D1 Mini's Wi-Fi
   server.handleClient();
+  ws2812fx.service();
 }
 
 void handleRoot() {
@@ -197,9 +198,6 @@ void handleRainbow() {
   // String message = "mode set to ";
   server.send(200, "text/html", message);
 }
-
-// TODO: set fire mode
-// TODO: cycle between modes
 
 int strToHex(String str) {
   const char * c = str.c_str();
