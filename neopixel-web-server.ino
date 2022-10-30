@@ -48,6 +48,7 @@ void setup() {
   server.on("/", handleRoot);
   server.on("/color", handleColor);
   server.on("/rainbow", handleRainbow);
+  server.on("/mode", handleMode);
   server.on("/orange", handleOrange);
   server.on("/brightness", handleBrightness);
   server.begin();
@@ -160,6 +161,25 @@ void handleBrightness() {
   ws2812fx.service();
 
   String message = "set brightness to " + String(brightness);
+  server.send(200, "text/html", message);
+}
+
+void handleMode() {
+  uint8 mode = 0;
+  String modeArg = server.arg("mode");
+  mode = modeArg.toInt();
+  if (mode < 0) {
+    mode = 0;
+  }
+  if (mode > 64) {
+    mode = 64;
+  }
+
+  ws2812fx.setMode(mode);
+  ws2812fx.show();
+  ws2812fx.service();
+
+  String message = "set mode to " + String(mode);
   server.send(200, "text/html", message);
 }
 
